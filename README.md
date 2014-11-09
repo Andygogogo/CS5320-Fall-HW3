@@ -17,9 +17,18 @@ Whenever an insertion operation is being executed, a new file is created inside 
 Whenever a deletion operation is being executed, the corresponding file is deleted.
 
 General Usage:
+    CREATE <tname>;
     INSERT INTO <tname> VALUES <sequence>;
     DELETE FROM <tname> TRAJECTORY <id>;
     RETRIEVE FROM <tname> TRAJECTORY <id>;
     RETRIEVE FROM <tname> COUNT OF <id>;
+    RETRIEVE FROM <tname> WHERE <field><op><val>;
+    EXIT;
 
-type EXIT; to exit the program.
+for advanced retreive, the field option can be "lati"(short for latitude),"long" or "alti".
+    the <op> can be ">=","<=","=","<",">"
+    the <val> should be a double or integer number.
+    notice that there should be no space between <filed>,<op> and <val>
+Example:
+    RETRIEVE FROM traj1 WHERE lati>39.987;
+

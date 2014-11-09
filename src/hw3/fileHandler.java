@@ -7,13 +7,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 public class fileHandler {
-	public static void createDirIfNotExist(String dir){
+	public static boolean createDirIfNotExist(String dir){
 		File file = new File(dir);
 		if (!file.exists() || !file.isDirectory()){
 			file.mkdirs();
+			return true;
 		}
+		return false;
 	}
 	
 	public static boolean appendToFile(String dir,String content){
@@ -64,7 +67,11 @@ public class fileHandler {
 		//find max id and return max+1
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
-				id_list[i] = Integer.parseInt(listOfFiles[i].getName());
+				try{
+					id_list[i] = Integer.parseInt(listOfFiles[i].getName());
+				}catch(Exception e){
+					id_list[i] = 0;
+				}
 			} 
 		}
 		Arrays.sort(id_list);
@@ -118,6 +125,65 @@ public class fileHandler {
 			}
 		}
 		return -1;
+	}
+
+	public static String retrieveRows(String file_folder,
+			String field, String op, String value) {
+		
+		String result = "";
+		File folder = new File(file_folder);
+		File[] listOfFiles = folder.listFiles();
+		if(listOfFiles.length == 0){
+			return "No Result Found";
+		}
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile() && !listOfFiles[i].getName().startsWith(".")) {
+				BufferedReader br = null;
+				try {
+					String sCurrentLine;
+					br = new BufferedReader(new FileReader(listOfFiles[i].toString()));
+					while ((sCurrentLine = br.readLine()) != null) {
+						if (satisfiedFormat( field, op,  value, sCurrentLine)){
+							System.out.println(sCurrentLine);
+//							result += sCurrentLine
+						}
+					}
+		 
+				} catch (IOException e) {
+					e.printStackTrace();
+					return "IO Exception in retrieving the files";
+				} 
+			} 
+		}
+		
+		return result;
+
+	}
+
+	private static boolean satisfiedFormat(String field, String op, String value, String line) {
+		String[] elements = line.split(",");
+		double data = 0; 
+		double v =  Double.parseDouble(value);
+		if(field.equals("lati"))
+			data = Double.parseDouble(elements[0]); 
+		else if (field.equals("long"))
+			data = Double.parseDouble(elements[1]);
+		else if (field.equals("alti"))
+			data = Double.parseDouble(elements[3]); 
+		
+		if (op.equals(">="))
+			return data>=v;
+		else if (op.equals("<="))
+			return data<=v;
+		else if (op.equals("="))
+			return data==v;				
+		else if (op.equals(">"))
+			return data>v;
+		else if (op.equals("<"))
+			return data<v;
+		
+		return false;
 	}
 
 }
