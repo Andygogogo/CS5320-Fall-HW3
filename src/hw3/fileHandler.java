@@ -84,6 +84,12 @@ public class fileHandler {
 		BufferedReader br = null;
 		String result = "";
 		try {
+			
+			File file = new File(file_path);
+			if(!file.exists()) {
+				System.out.println("ID: " + file_path + " not exists!");
+				return null;
+			}
  
 			String sCurrentLine;
 			br = new BufferedReader(new FileReader(file_path));
