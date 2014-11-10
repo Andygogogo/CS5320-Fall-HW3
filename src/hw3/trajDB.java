@@ -15,7 +15,7 @@ public class trajDB {
 				while (true){
 					currentLine = br.readLine().toLowerCase();
 					query += currentLine;
-					if(currentLine.charAt(currentLine.length()-1)==';')
+					if(currentLine.length() != 0 && currentLine.charAt(currentLine.length()-1)==';')
 						break;
 				}
 				trajHandler.handleQuery(query);
